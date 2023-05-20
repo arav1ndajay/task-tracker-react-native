@@ -24,7 +24,6 @@ import {
 import { signOut } from "firebase/auth";
 import colors from "../utils/colors";
 import { Ionicons } from "@expo/vector-icons";
-import tempData from "../tempData";
 import TaskList from "../components/TaskList";
 import NewListModal from "../components/NewListModal";
 

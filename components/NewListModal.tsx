@@ -10,7 +10,6 @@ import {
 import colors from "../utils/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { ColorPicker, toHsv, fromHsv } from "react-native-color-picker";
-import tempData from "../tempData";
 
 const NewListModal = ({ closeModal, addList }: any) => {
   const [title, setTitle] = useState<string>("");

@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import colors from "../utils/colors";
 import { Ionicons } from "@expo/vector-icons";
-import tempData from "../tempData";
 
 const TaskModal = ({ list, closeModal, updateList }: any) => {
   const taskCount = list.tasks.length;
