@@ -19,6 +19,7 @@ import {
   onSnapshot,
   updateDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import colors from "../utils/colors";
@@ -45,14 +46,6 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const addList = async (list: any) => {
-    // setLists([
-    //   ...lists,
-    //   {
-    //     uid: auth.currentUser?.uid,
-    //     ...list,
-    //     tasks: [],
-    //   },
-    // ]);
     await addDoc(collection(db, "lists"), {
       uid: auth.currentUser?.uid,
       ...list,
@@ -61,14 +54,13 @@ const HomeScreen = () => {
   };
 
   const updateList = async (list: any) => {
-    // setLists(
-    //   lists.map((item) => {
-    //     return item.id === list.id ? list : item;
-    //   })
-    // );
     const docRef = doc(db, "lists", list.id);
 
     await updateDoc(docRef, list);
+  };
+
+  const deleteList = async (list: any) => {
+    await deleteDoc(doc(db, "lists", list.id));
   };
 
   const handleSignOut = () => {
@@ -149,27 +141,45 @@ const HomeScreen = () => {
         />
       </Modal>
       <View style={{ flexDirection: "row" }}>
-        <Text style={styles.title}>Tasks</Text>
+        <Text style={styles.title}>Task Lists</Text>
       </View>
-      
-      <View style={{ height: 275, paddingLeft: 32, marginTop: 48 }}>
-        <FlatList
-          data={lists}
-          keyExtractor={(item) => item.title}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <TaskList list={item} updateList={updateList} />
-          )}
-          keyboardShouldPersistTaps="always"
-        />
-      </View>
+      {lists === undefined || lists.length === 0 ? (
+        <Text
+          style={{
+            color: colors.white,
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 16,
+            fontWeight: "600",
+          }}
+        >
+          No Task Lists. Try adding some.
+        </Text>
+      ) : (
+        <View style={{ height: 275, paddingLeft: 32, marginTop: 48 }}>
+          <FlatList
+            data={lists}
+            keyExtractor={(item) => item.title}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <TaskList
+                list={item}
+                updateList={updateList}
+                deleteList={deleteList}
+              />
+            )}
+            keyboardShouldPersistTaps="always"
+          />
+        </View>
+      )}
+
       <View style={{ marginVertical: 48 }}>
         <TouchableOpacity
           style={styles.addIcon}
           onPress={() => setShowModal(true)}
         >
-          <Ionicons name="add" size={18} color={colors.purple}></Ionicons>
+          <Ionicons name="add" size={18} color={colors.white}></Ionicons>
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={handleSignOut} style={styles.button}>
@@ -219,6 +229,7 @@ const styles = StyleSheet.create({
     borderColor: colors.purple,
     borderRadius: 4,
     alignItems: "center",
+    backgroundColor: colors.purple,
     justifyContent: "center",
   },
 });

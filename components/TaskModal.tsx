@@ -7,7 +7,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   TextInput,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import colors from "../utils/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,21 +24,30 @@ const TaskModal = ({ list, closeModal, updateList }: any) => {
     updateList(list);
   };
 
+  const removeTask = (index: any) => {
+    list.tasks.splice(index, 1);
+    updateList(list);
+  };
+
   const addTask = () => {
     list.tasks.push({
-        title: newTask,
-        completed: false
-    })
+      title: newTask,
+      completed: false,
+    });
 
-    updateList(list)
-    setNewTask("")
+    updateList(list);
+    setNewTask("");
 
-    Keyboard.dismiss()
-  }
+    Keyboard.dismiss();
+  };
 
   const renderTask = (task: any, index: any) => {
     return (
-      <KeyboardAvoidingView style={styles.taskContainer}>
+      <KeyboardAvoidingView
+        style={styles.taskContainer}
+        behavior={"padding"}
+        keyboardVerticalOffset={45}
+      >
         <TouchableOpacity onPress={() => toggleTaskCompleted(index)}>
           <Ionicons
             name={task.completed ? "square" : "square-outline"}
@@ -57,13 +66,18 @@ const TaskModal = ({ list, closeModal, updateList }: any) => {
         >
           {task.title}
         </Text>
+        <TouchableOpacity
+          style={{ flex: 1, alignItems: "flex-end" }}
+          onPress={() => removeTask(index)}
+        >
+          <Ionicons name="trash" size={18} color={colors.white} />
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     );
   };
 
-  const completedCount = list.tasks.filter(
-    (task: any) => task.completed
-  ).length;
+  const pendingCount =
+    list.tasks.length - list.tasks.filter((task: any) => task.completed).length;
 
   return (
     <View style={styles.container}>
@@ -82,7 +96,7 @@ const TaskModal = ({ list, closeModal, updateList }: any) => {
       >
         <Text style={styles.title}>{list.title}</Text>
         <Text style={styles.taskCount}>
-          {completedCount} of {taskCount} tasks
+          {pendingCount} pending {pendingCount !== 1 ? "tasks" : "task"}
         </Text>
       </View>
 
@@ -121,7 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.black
+    backgroundColor: colors.black,
   },
   section: {
     flex: 1,
@@ -129,11 +143,11 @@ const styles = StyleSheet.create({
   },
   header: {
     justifyContent: "flex-end",
-    marginLeft: 64,
+    marginLeft: 20,
     borderBottomWidth: 3,
   },
   footer: {
-    paddingHorizontal: 32,
+    paddingHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -154,7 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 8,
     paddingHorizontal: 8,
-    color: colors.white
+    color: colors.white,
   },
   addTask: {
     borderRadius: 4,

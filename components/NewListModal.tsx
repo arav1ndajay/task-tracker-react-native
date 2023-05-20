@@ -17,20 +17,23 @@ const NewListModal = ({ closeModal, addList }: any) => {
   const [color, setColor] = useState(toHsv("green"));
 
   const createTaskList = () => {
-
     const taskList = {
-        title: title,
-        color: fromHsv(color),
-    }
+      title: title,
+      color: fromHsv(color),
+    };
 
-    addList(taskList)
+    addList(taskList);
 
     setTitle("");
     closeModal();
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="padding"
+      keyboardVerticalOffset={45}
+    >
       <TouchableOpacity
         style={{ position: "absolute", top: 32, right: 32 }}
         onPress={closeModal}
@@ -42,6 +45,7 @@ const NewListModal = ({ closeModal, addList }: any) => {
         <TextInput
           style={styles.input}
           placeholder="Enter name of list"
+          placeholderTextColor={colors.grey}
           onChangeText={(text) => setTitle(text)}
         />
         <View style={{ alignSelf: "center", width: 150, height: 150 }}>
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.black
+    backgroundColor: colors.black,
   },
   heading: {
     fontSize: 32,
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: colors.white
+    color: colors.white,
   },
   createList: {
     marginTop: 24,
